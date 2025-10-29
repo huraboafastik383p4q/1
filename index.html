@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>MicroTrip Web — Slime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Игровой холст -->
+  <canvas id="game"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <!-- Центр: счёт + ниже — мультипликатор -->
+    <div id="scoreWrap">
+      <div id="score">0</div>
+      <div id="multibar" aria-label="score multiplier">
+        <div id="multifill"></div>
+        <div id="multitext">x1.0</div>
+      </div>
+    </div>
+
+    <!-- Слева-сверху: вертикальная колба HP (уменьшена в 2 раза) -->
+    <div id="hpVial" class="vial" aria-label="health">
+      <!-- УБРАНО .vial-cap, чтобы не было синего артефакта сверху -->
+      <div class="vial-glass">
+        <div class="vial-fill" id="hpVialFill"></div>
+        <div class="vial-ticks"></div>
+        <div class="vial-gloss"></div>
+      </div>
+      <div class="vial-label" id="hpVialText">100%</div>
+    </div>
+
+    <!-- Справа-сверху: счётчик еды (число + «та же» частица, но в канвасе) -->
+    <div id="foodchip" class="hud-chip" aria-label="food counter">
+      <span id="foodcount">0</span>
+      <canvas id="foodIconCanvas" class="food-canvas" width="22" height="22" title="+1 еда"></canvas>
+    </div>
+  </div>
+
+  <script type="module" src="src/game.js"></script>
+</body>
+</html>

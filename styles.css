@@ -1,0 +1,153 @@
+/* ====== Базовая раскладка ====== */
+:root{
+  --bg0: #04070f;
+  --hud-glass1: rgba(20,35,70,0.92);
+  --hud-glass2: rgba(10,15,30,0.92);
+  --neon-cyan: #57e7ff;
+  --neon-teal: #23c49b;
+  --hp-hue: 140; /* 140=зелёный, 0=красный — JS анимирует */
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; background: var(--bg0); margin:0; overflow:hidden; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,sans-serif; }
+
+#game{
+  position: fixed; inset: 0;
+  width:100vw; height:100vh; display:block;
+  background: radial-gradient(120% 100% at 50% 0%, #081126, #050a18 60%, #04070f);
+}
+
+/* ====== HUD ====== */
+#hud{ position:fixed; inset:0; pointer-events:none; }
+
+/* Счёт по центру наверху */
+#scoreWrap{
+  position: fixed; top: clamp(10px, 2.5vh, 24px); left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: clamp(4px, .8vh, 8px);
+  z-index: 20;
+}
+#score{
+  pointer-events:none;
+  color:#eaffff;
+  font-weight:800;
+  font-size: clamp(28px, 6.6vw, 56px);
+  letter-spacing: .02em;
+  text-shadow: 0 2px 10px rgba(120,240,220,.25), 0 0 24px rgba(40,180,150,.25);
+}
+
+/* Полоска множителя ниже счёта */
+#multibar{
+  position: relative;
+  width: clamp(160px, 38vw, 420px);
+  height: clamp(10px, 1.6vh, 14px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(12,20,40,.75), rgba(8,12,24,.75));
+  border: 1px solid rgba(120,220,255,.3);
+  box-shadow: inset 0 0 6px rgba(160,255,245,.12), 0 0 12px rgba(40,180,150,.18);
+  overflow: hidden;
+}
+#multifill{
+  position:absolute; inset:0;
+  width: 0%;
+  background: linear-gradient(90deg, #22f6d9, #4c83ff);
+  filter: drop-shadow(0 0 8px rgba(80,220,210,.5));
+  border-radius: inherit;
+  transition: width .15s ease;
+}
+#multitext{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-weight: 700; font-size: clamp(10px, 1.6vh, 13px);
+  color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+/* Вертикальная колба HP — теперь вверху слева и в 2 раза меньше */
+.vial{
+  position: fixed;
+  left: clamp(10px, 2vw, 20px);
+  top: clamp(10px, 2.5vh, 18px);
+  height: clamp(100px, 28vh, 230px);   /* было ~200..460 → стало в 2 раза меньше */
+  width: clamp(20px, 2.6vw, 26px);
+  display: grid; grid-template-rows: 1fr auto; gap: 6px;
+  z-index: 15; pointer-events:none;
+}
+.vial-glass{
+  position: relative; overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(160,220,255,.35);
+  background:
+    linear-gradient(180deg, var(--hud-glass1), var(--hud-glass2)) padding-box,
+    radial-gradient(100% 100% at 0% 0%, rgba(87,231,255,.25), transparent 60%),
+    radial-gradient(100% 100% at 100% 100%, rgba(35,196,155,.25), transparent 60%);
+  box-shadow: inset 0 0 10px rgba(160,255,245,.18), 0 0 18px rgba(40,180,150,.2);
+}
+.vial-fill{
+  position:absolute; left:0; right:0; bottom:0;
+  height:100%;
+  transform-origin: bottom center;
+  transform: scaleY(1);
+  background: linear-gradient(180deg,
+    hsl(var(--hp-hue), 90%, 62%) 0%,
+    hsl(calc(var(--hp-hue) - 10), 85%, 48%) 100%);
+  filter: drop-shadow(0 0 10px rgba(60,220,200,.35));
+  transition: transform .12s ease, filter .12s ease;
+}
+.vial-ticks{
+  position:absolute; inset: 6px 3px;
+  background:
+    repeating-linear-gradient(
+      to top,
+      rgba(255,255,255,.18) 0px, rgba(255,255,255,.18) 1px,
+      transparent 1px, transparent 14px),
+    repeating-linear-gradient(
+      to top,
+      rgba(255,255,255,.30) 0px, rgba(255,255,255,.30) 2px,
+      transparent 2px, transparent 70px);
+  mix-blend-mode: screen;
+  pointer-events:none;
+}
+.vial-gloss{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0) 35%),
+    linear-gradient(270deg, rgba(255,255,255,.08), rgba(255,255,255,0) 40%),
+    radial-gradient(120% 60% at 10% 10%, rgba(255,255,255,.18), transparent 60%);
+  pointer-events:none;
+}
+.vial-label{
+  text-align:center; color:#eaffff; font-weight:700;
+  font-size: clamp(10px, 1.6vh, 12px);
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  letter-spacing:.4px;
+}
+
+/* Счётчик еды справа сверху */
+#foodchip.hud-chip{
+  position: fixed;
+  top: clamp(10px, 2.5vh, 22px);
+  right: clamp(10px, 2vw, 18px);
+  height: clamp(20px, 3.6vh, 24px);
+  padding: 0 clamp(8px, 1.6vw, 10px);
+  display:flex; align-items:center; gap: 8px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(12,20,40,.8), rgba(8,12,24,.8));
+  border: 1px solid rgba(160,255,245,.35);
+  box-shadow: 0 0 12px rgba(90,240,210,.18), inset 0 0 6px rgba(160,255,245,.15);
+  color:#eaffff;
+  z-index: 16;
+  pointer-events:none;
+}
+#foodcount{
+  font-weight: 800;
+  font-size: clamp(12px, 2vh, 14px);
+  min-width: 1.6em;
+  text-align: right;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+/* Канвас-иконка частицы еды (1-в-1 как в игре) */
+.food-canvas{
+  width: clamp(16px, 2.6vh, 18px);
+  height: clamp(16px, 2.6vh, 18px);
+  display:block;
+  filter: drop-shadow(0 0 10px rgba(160,255,240,.75)) drop-shadow(0 0 18px rgba(60,180,150,.55));
+}
